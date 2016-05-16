@@ -2,9 +2,24 @@ require 'rails_helper'
 
 RSpec.describe GramsController, type: :controller do
 
+  describe "grams#destroy" do
+    it "should allow a user to destroy grams" do
+      gram = FactoryGirl.create(:gram)
+      delete :destroy, id: gram.id
+      expect(response).to redirect_to root_path
+      gram = Gram.find_by_id(gram.id)
+      expect(gram).to eq nil
+    end
+
+    it "should return a 404 message if we cannot find a gram with the id that is specified" do
+      delete :destroy, id: 'SPACEDUCK'
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
   describe "grams#update" do
     it "should allow users to successfully update grams" do
-      gram = FactoryGirl.create(:gram, message: "Inital Value")
+      gram = FactoryGirl.create(:gram, message: "Initial Value")
       patch :update, id: gram.id, gram: {message: 'Changed'}
       expect(response).to redirect_to root_path
       gram.reload
@@ -17,7 +32,7 @@ RSpec.describe GramsController, type: :controller do
     end
 
     it "should render the edit form with an http status of unprocessable_entity" do
-      gram = FactoryGirl.create(:gram, message: "Inital Value")
+      gram = FactoryGirl.create(:gram, message: "Initial Value")
       patch :update, id: gram.id, gram: { message: '' }
       expect(response).to have_http_status(:unprocessable_entity)
       gram.reload
