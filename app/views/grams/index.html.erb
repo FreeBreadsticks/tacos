@@ -12,7 +12,9 @@
           <%= link_to 'Delete', gram_path(gram), method: :delete, data: {confirm: 'Are you sure?'} %>
         <% end %>
       </div>
+
       <br class="clear-fix">
+
       <div class="comments">
         <h3>Comments</h3>
         <% gram.comments.each do |comment| %>
@@ -21,7 +23,7 @@
               <%= comment.user.email %>
             </span>
 
-            <%= comment.message %>
+            -<%= comment.message %>
           </div>
         <% end %>
         <hr>
